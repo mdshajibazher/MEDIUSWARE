@@ -22,6 +22,7 @@ Auth::routes();
 Route::get('/home', 'HomeController@index')->name('home');
 
 Route::middleware('auth')->group(function () {
+    Route::get('productfilter','ProductController@filter')->name('product.filter');
     Route::resource('product-variant', 'VariantController');
     Route::resource('product', 'ProductController');
     Route::resource('blog', 'BlogController');

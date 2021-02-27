@@ -8,14 +8,22 @@
 
 
     <div class="card">
-        <form action="" method="get" class="card-header">
+        <form action="{{route('product.filter')}}" method="get" class="card-header">
             <div class="form-row justify-content-between">
                 <div class="col-md-2">
                     <input type="text" name="title" placeholder="Product Title" class="form-control">
                 </div>
                 <div class="col-md-2">
                     <select name="variant" id="" class="form-control">
-
+                        @foreach ($variants as $variantlabel)
+                          <optgroup label="{{$variantlabel->title}}">
+                            @foreach($variantlabel->VariantChildren as $child_item)
+                            <option value="{{ $child_item->id}}">{{$child_item->variant}}</option>
+                          
+                            @endforeach
+                          </optgroup>
+                        @endforeach
+                        
                     </select>
                 </div>
 
@@ -39,7 +47,7 @@
 
         <div class="card-body">
             <div class="table-response">
-                <table class="table">
+                <table class="table" id="d_table">
                     <thead>
                     <tr>
                         <th>#</th>
@@ -51,22 +59,35 @@
                     </thead>
 
                     <tbody>
-
+                        @foreach ($products as $key => $product)
+                      
+                        @php
+                        $firstitem= $products->firstItem(); 
+                        $lastitem= $products->lastItem(); 
+                        @endphp
                     <tr>
-                        <td>1</td>
-                        <td>T-Shirt <br> Created at : 25-Aug-2020</td>
-                        <td>Quality product in low cost</td>
+                        <td>{{$firstitem+$key}}</td>
+                        <td>{{$product->title}}<br> Created at : {{$product->created_at->format('d-M-Y')}} </td>
+                        <td>{{Str::limit($product->description,20)}}</td>
                         <td>
                             <dl class="row mb-0" style="height: 80px; overflow: hidden" id="variant">
 
                                 <dt class="col-sm-3 pb-0">
-                                    SM/ Red/ V-Nick
+                                   
+
+                                    @foreach ($product->Variant as $item)
+                                    {{$item->variant}}/
+                                    @endforeach
+                                 
                                 </dt>
                                 <dd class="col-sm-9">
+                                    @foreach ($product->VariantPrice as $item)
                                     <dl class="row mb-0">
-                                        <dt class="col-sm-4 pb-0">Price : {{ number_format(200,2) }}</dt>
-                                        <dd class="col-sm-8 pb-0">InStock : {{ number_format(50,2) }}</dd>
+                                        <dt class="col-sm-4 pb-0">Price : {{ number_format($item->price,2) }}</dt>
+                                        <dd class="col-sm-8 pb-0">InStock : {{$item->stock }}</dd>
                                     </dl>
+                                    @endforeach
+                                   
                                 </dd>
                             </dl>
                             <button onclick="$('#variant').toggleClass('h-auto')" class="btn btn-sm btn-link">Show more</button>
@@ -77,7 +98,7 @@
                             </div>
                         </td>
                     </tr>
-
+                    @endforeach
                     </tbody>
 
                 </table>
@@ -88,10 +109,10 @@
         <div class="card-footer">
             <div class="row justify-content-between">
                 <div class="col-md-6">
-                    <p>Showing 1 to 10 out of 100</p>
+                    <p>Showing {{$firstitem}} to {{$lastitem}} out of {{$products->total()}}</p>
                 </div>
-                <div class="col-md-2">
-
+                <div class="col-md-6">
+                    {{$products->links()}}
                 </div>
             </div>
         </div>

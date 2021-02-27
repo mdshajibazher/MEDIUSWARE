@@ -27,8 +27,7 @@
                         <h6 class="m-0 font-weight-bold text-primary">Media</h6>
                     </div>
                     <div class="card-body border">
-<vue-dropzone ref="myVueDropzone" id="dropzone" :options="dropzoneOptions"></vue-dropzone>
-
+                        <vue-dropzone ref="myVueDropzone" id="dropzone" :options="dropzoneOptions"></vue-dropzone>
                     </div>
                 </div>
             </div>
@@ -106,16 +105,22 @@ import 'vue2-dropzone/dist/vue2Dropzone.min.css'
 import InputTag from 'vue-input-tag'
 
 export default {
+    created(){
+        this.getData();
+    },
     components: {
-        InputTag,
         vueDropzone: vue2Dropzone,
+        InputTag
     },
     props: {
         variants: {
             type: Array,
             required: true
+        },
+        pdinfo: {
+            type: Object,
+            required: true
         }
-        
     },
     data() {
         return {
@@ -123,7 +128,7 @@ export default {
             product_name: '',
             product_sku: '',
             description: '',
-            image: [],
+            images: [],
             product_variant: [
                 {
                     option: this.variants[0].id,
@@ -138,25 +143,15 @@ export default {
                 autoProcessQueue: false,
                 //headers: {"My-Awesome-Header": "header value"}
             }
-
         }
     },
     methods: {
 
-        onFileselected(event){
-        		let file=event.target.files[0];
-        		if (file.size > 3048770) {
-        			alert('image must not be greater than 3048770 bytes')
-        		}else{
-        			let reader = new FileReader();
-        			reader.onload = event => {
-        				this.image = event.target.result
-        			};
-        			reader.readAsDataURL(file);
-
-        		}
-          },
-          
+        getData(){
+            this.product_name = this.pdinfo.title;
+            this.product_sku = this.pdinfo.sku;
+            this.description = this.pdinfo.description;
+        },
 
         // it will push a new object into product variant
         newVariant() {

@@ -13,9 +13,11 @@ class VariantController extends Controller
      *
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Http\Response|\Illuminate\View\View
      */
+
+     
     public function index()
     {
-        $variants = Variant::paginate(10);
+        $variants = Variant::paginate(2);
         return view('products.variant.index', compact('variants'));
     }
 

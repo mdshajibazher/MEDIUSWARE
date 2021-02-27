@@ -38,8 +38,12 @@
                     </tfoot>
                     <tbody>
                     @foreach($variants as $key=>$variant)
+                    @php
+                    $firstitem= $variants->firstItem();  
+                    $lastitem= $variants->lastItem(); 
+                    @endphp
                         <tr>
-                            <td>{{ $key +1 }}</td>
+                            <td>{{ $firstitem +$key }}</td>
                             <td>{{ $variant->title }}</td>
                             <td>{{ nl2br($variant->description) }}</td>
                             <td>
@@ -56,10 +60,18 @@
             </div>
         </div>
 
-        <div class="card-footer d-sm-flex align-items-center justify-content-between mb-4">
-            <p>1 to 10 out of 100</p>
-            {{ $variants->links() }}
+        <div class="card-footer">
+            <div class="row justify-content-between">
+                <div class="col-md-6">
+                    <p>Showing {{$firstitem}} to {{$lastitem}} out of {{$variants->total()}}</p>
+                </div>
+                <div class="col-md-2">
+                    {{$variants->links()}}
+                </div>
+            </div>
         </div>
+
+
     </div>
 @endsection
 
